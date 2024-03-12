@@ -8,7 +8,7 @@ editor_options:
 
 ## 
 
-Group F - member: - Vu Nguyen (V202000145) - Nguyen Nhat Minh - Le
+Group F - member: - Vu Nguyen - Nguyen Nhat Minh - Le
 Nguyen Nhat Minh
 
 ## Introduction
@@ -43,7 +43,7 @@ solutions to combat future trash dumping.
         collected, quantified.
     -   HomesPowered: Each ton of trash equates to on average 500
         kilowatts of electricity. An average household will use 30
-        kilowatts per day. \### Questions to answer
+        kilowatts per day.
 
 ### Data dictionary
 
