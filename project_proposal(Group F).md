@@ -71,15 +71,9 @@ solutions to combat future trash dumping.
 -   What are the types of waste composition that has their weight/volume
     increase in the last 6 months?
 
--   Which dumpster in a certain region mostly contain a significant
-    amount of trashes (in a specific type) that can not be recycled?
-
 -   Which type of trash wheels have a highest performance, throughout
     the years, analyse the improvement of the usage of different trash
     wheel?
-
--   What would be the solutions for reducing the trash dumping,
-    especially for the **non-biodegradable waste**?
 
 ### Plan for answering the questions
 
