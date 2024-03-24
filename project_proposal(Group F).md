@@ -366,49 +366,49 @@ solutions to combat future trash dumping.
     Our goal is to determine which Trash Wheel is the most efficient in terms of waste collection, as well as to understand the trajectory of operational improvements demonstrated over time.
 
 -   Detailed analytical approach involves data segmentation and aggregation. 
-        -   To begin, we separate the dataset by Trash Wheel, which are identified by unique "ID" and "Name" attributes. This step is essential for a thorough analysis. 
-            Following that, we aggregate the data for each Trash Wheel on an annual basis, calculating the total "Weight" and "Volume" of waste collected that year.
-            This aggregation provides a yearly snapshot of performance, allowing for a long-term comparison of each Trash Wheel's effectiveness.
+-   To begin, we separate the dataset by Trash Wheel, which are identified by unique "ID" and "Name" attributes. This step is essential for a thorough analysis. 
+    Following that, we aggregate the data for each Trash Wheel on an annual basis, calculating the total "Weight" and "Volume" of waste collected that year.
+    This aggregation provides a yearly snapshot of performance, allowing for a long-term comparison of each Trash Wheel's effectiveness.
 
 -   Performance metric analysis:
-        -   To evaluate the operational efficiency of the Trash Wheels, we will use the "Weight" and "Volume" metrics similar to those used in the first question. 
-            An annual comparison of these metrics across different Trash Wheels will reveal performance trends and patterns, as well as areas for improvement.
+    -   To evaluate the operational efficiency of the Trash Wheels, we will use the "Weight" and "Volume" metrics similar to those used in the first question. 
+        An annual comparison of these metrics across different Trash Wheels will reveal performance trends and patterns, as well as areas for improvement.
 
-        -   Trend Analysis and Visualization: We will use time-series analysis to chart the historical performance of each trash wheel. 
-            This will include a visual representation of "Weight" and "Volume" metrics over time, which will aid in identifying any significant performance trends, spikes, or declines that may require further investigation.
+    -   Trend Analysis and Visualization: We will use time-series analysis to chart the historical performance of each trash wheel. 
+        This will include a visual representation of "Weight" and "Volume" metrics over time, which will aid in identifying any significant performance trends, spikes, or declines that may require further investigation.
         
-        -   Graphical Representations for Analysis:
-                -   Performance Over Time: Line Graphs
-                        -   Purpose: To illustrate the performance of each Trash Wheel over time, highlighting trends and year-on-year changes in waste collection.
-                        -   Variables Displayed: Total annual "Weight" and "Volume" of collected waste for each Trash Wheel.
-                        -   New Variables: "Yearly Performance Growth Rate," calculated as the percentage change in "Weight" and "Volume" from one year to the next, 
-                            to quantify performance improvements or declines.
-                -   Comparative Analysis: Boxplots
-                        -   Purpose: To compare the variability and central tendency in the annual performance of Trash Wheels, identifying outliers and consistency in performance.
-                        -   Variables Displayed: Distribution of "Weight" and "Volume" metrics across years for each Trash Wheel.
-                        -   New Variables: "Seasonal Performance Indices," representing aggregated "Weight" and "Volume" over predefined seasons within each year, 
-                            to examine seasonal patterns and anomalies.
-                -   Efficiency and Improvement Visualization: Stacked Bar Charts
-                        -   Purpose: To showcase the efficiency improvements and operational enhancements of Trash Wheels over the years.
-                        -   Variables Displayed: Breakdown of "Weight" and "Volume" by different waste types or categories each year, showing the composition and diversity of waste
-                            collection
-                        -   New Variables: "Operational Efficiency Score," a composite metric derived from the volume of waste collected per operational hour or day, indicating the
-                            operational efficiency of each Trash Wheel.
-                -   Correlation Analysis: Scatter Plots
-                        -   Purpose: To explore the relationship between operational enhancements (like technological upgrades) and performance metrics.
-                        -   Variables Displayed: Operational enhancements or changes as discrete events plotted against performance metrics ("Weight" and "Volume").
-                        -   New Variables: "Technology Upgrade Index," quantifying the extent and impact of technological upgrades on performance, mapped against the timeline of waste
-                            collection metrics.
+    -   Graphical Representations for Analysis:
+        -   Performance Over Time: Line Graphs
+        -   Purpose: To illustrate the performance of each Trash Wheel over time, highlighting trends and year-on-year changes in waste collection.
+        -   Variables Displayed: Total annual "Weight" and "Volume" of collected waste for each Trash Wheel.
+        -   New Variables: "Yearly Performance Growth Rate," calculated as the percentage change in "Weight" and "Volume" from one year to the next, 
+            to quantify performance improvements or declines.
+        -   Comparative Analysis: Boxplots
+        -   Purpose: To compare the variability and central tendency in the annual performance of Trash Wheels, identifying outliers and consistency in performance.
+        -   Variables Displayed: Distribution of "Weight" and "Volume" metrics across years for each Trash Wheel.
+        -   New Variables: "Seasonal Performance Indices," representing aggregated "Weight" and "Volume" over predefined seasons within each year, 
+            to examine seasonal patterns and anomalies.
+        -   Efficiency and Improvement Visualization: Stacked Bar Charts
+        -   Purpose: To showcase the efficiency improvements and operational enhancements of Trash Wheels over the years.
+        -   Variables Displayed: Breakdown of "Weight" and "Volume" by different waste types or categories each year, showing the composition and diversity of waste
+            collection
+        -   New Variables: "Operational Efficiency Score," a composite metric derived from the volume of waste collected per operational hour or day, indicating the
+            operational efficiency of each Trash Wheel.
+        -   Correlation Analysis: Scatter Plots
+        -   Purpose: To explore the relationship between operational enhancements (like technological upgrades) and performance metrics.
+        -   Variables Displayed: Operational enhancements or changes as discrete events plotted against performance metrics ("Weight" and "Volume").
+        -   New Variables: "Technology Upgrade Index," quantifying the extent and impact of technological upgrades on performance, mapped against the timeline of waste
+            collection metrics.
 
         -   Newly Created Variables for In-Depth Analysis:
-                    -   Yearly Performance Growth Rate: This variable will be crucial for identifying trends in the performance of each Trash Wheel, highlighting whether there has
-                        been an improvement or decline in waste collection capabilities over the years.
-                    -   Seasonal Performance Indices: By aggregating "Weight" and "Volume" data into seasonal segments, we can analyze how seasonal variations and operational changes
-                        impact the performance of Trash Wheels.
-                    -   Operational Efficiency Score: This composite metric will consider factors such as the amount of waste collected per operational hour and the diversity of waste
-                        types handled, providing a holistic view of each Trash Wheel's operational efficiency.               
-                    -   Technology Upgrade Index: Reflecting the cumulative impact of technological upgrades on performance, this index will be correlated with waste collection
-                        metrics to assess the effectiveness of operational enhancements.
+        -   Yearly Performance Growth Rate: This variable will be crucial for identifying trends in the performance of each Trash Wheel, highlighting whether there has
+            been an improvement or decline in waste collection capabilities over the years.
+        -   Seasonal Performance Indices: By aggregating "Weight" and "Volume" data into seasonal segments, we can analyze how seasonal variations and operational changes
+            impact the performance of Trash Wheels.
+        -   Operational Efficiency Score: This composite metric will consider factors such as the amount of waste collected per operational hour and the diversity of waste
+            types handled, providing a holistic view of each Trash Wheel's operational efficiency.               
+        -   Technology Upgrade Index: Reflecting the cumulative impact of technological upgrades on performance, this index will be correlated with waste collection
+            metrics to assess the effectiveness of operational enhancements.
 
         -   Using these graphical representations and newly created variables, we will be able to conduct a detailed analysis of the Trash Wheels' performance and 
             operational improvements over time. By visually illustrating trends, correlations, and comparative performance metrics, we can gain actionable insights into which Trash Wheels are the most efficient and how operational strategies can be optimized for better waste collection and environmental sustainability. This comprehensive approach, informed by the detailed methodology used for the first question, will result in a robust and insightful analysis that addresses our research's primary objectives.
