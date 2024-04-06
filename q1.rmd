@@ -7,14 +7,12 @@ library(tidyr)
 # Read the CSV file
 data <- read.csv("trashwheel.csv")
 data$Date <- as.Date(data$Date, format = "%m/%d/%Y")
-print(data)
 ```
 
 ```{r}
 # Filter data for the last 6 months
 recent_data <- data %>%
   filter(Date > max(Date) %m-% months(6))
-print(recent_data)
 ```
 
 ```{r}
