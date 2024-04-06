@@ -1,0 +1,156 @@
+---
+title: "Question2"
+output: html_document
+date: "2024-04-06"
+---
+
+```{r}
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(tidyr)
+
+# Read the CSV file
+data <- read.csv("trashwheel.csv")
+data$Date <- as.Date(data$Date, format = "%m/%d/%Y")
+```
+
+```{r}
+# Filter data for the last 6 months
+recent_data <- data %>%
+  filter(Date > max(Date) %m-% months(6))
+```
+
+```{r}
+sums_recent <- recent_data %>%
+  select(-Year) %>%
+  select(-Date) %>%
+  summarise(across(where(is.numeric), sum, na.rm = TRUE))
+
+head(sums_recent)
+```
+
+```{r}
+sums_recent <- pivot_longer(sums_recent, cols = everything(), names_to = "Waste_Type", values_to = "Total")
+
+print(sums_recent)
+```
+
+```{r}
+ggplot(sums_recent, aes(x = Waste_Type, y = Total, fill = Waste_Type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Total Waste Collected Over the Last 6 Months",
+       x = "Waste Type",
+       y = "Total Collected",
+       fill = "Waste Type") +
+  scale_fill_brewer(palette = "Set3")
+```
+
+```{r}
+recent_data_long <- recent_data %>%
+  select(Date, PlasticBottles, Polystyrene, CigaretteButts, GlassBottles,
+         PlasticBags, Wrappers, SportsBalls) %>%
+  gather(key = "Waste_Type", value = "Count", -Date)
+
+head(recent_data_long)
+```
+
+```{r}
+ggplot(recent_data_long, aes(x = Waste_Type, y = Count)) + 
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Boxplot of Various Waste Types Over the Last 6 Months",
+       x = "Waste Type",
+       y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+summary_stats <- recent_data_long %>%
+  group_by(Waste_Type) %>%
+  summarise(Median_Count = median(Count),
+            IQR = IQR(Count),
+            Lower_Whisker = quantile(Count, 0.25) - 1.5 * IQR(Count),
+            Upper_Whisker = quantile(Count, 0.75) + 1.5 * IQR(Count),
+            Mean_Count = mean(Count))
+
+# Print the summary statistics
+print(summary_stats)
+```
+
+```{r}
+recent_data_long$Date_numeric <- as.numeric(recent_data_long$Date - min(recent_data_long$Date))
+
+# List of waste types to model
+waste_types <- c("Polystyrene", "CigaretteButts", "GlassBottles", "PlasticBags", "Wrappers", "SportsBalls")
+
+# Initialize an empty list to store models
+models <- list()
+
+# Loop over waste types, fit model, and store
+for(waste in waste_types) {
+  model <- lm(Count ~ Date_numeric, data = filter(recent_data_long, Waste_Type == waste))
+  models[[waste]] <- model
+}
+
+# Display summaries of all models
+lapply(models, summary)
+```
+
+```{r}
+# Function to create prediction plots for a given waste type
+create_prediction_plot <- function(waste) {
+  # Extending the prediction range to include the next 3 months
+  max_date_numeric <- max(recent_data_long$Date_numeric)
+  future_extend <- as.numeric((max(recent_data_long$Date) %m+% months(3)) - max(recent_data_long$Date))
+  prediction_data <- data.frame(Date_numeric = seq(min(recent_data_long$Date_numeric), max_date_numeric + future_extend, by = 1))
+  prediction_data$Predicted_Count <- predict(models[[waste]], newdata = prediction_data)
+  prediction_data$Date <- min(recent_data_long$Date) + prediction_data$Date_numeric * days(1)
+
+  # Plotting
+  p <- ggplot(filter(recent_data_long, Waste_Type == waste), aes(x = Date, y = Count)) +
+    geom_point(aes(color = "Actual Data"), size = 2) +
+    geom_line(data = prediction_data, aes(x = Date, y = Predicted_Count, color = "Predicted Data")) +
+    theme_minimal() +
+    labs(title = paste("Predictive Model for", waste, "Waste"),
+         x = "Date",
+         y = paste("Count of", waste),
+         color = "Data Type")
+
+  return(p)
+}
+```
+
+```{r}
+# Use the function to create plots
+plot_list <- lapply(waste_types, create_prediction_plot)
+
+plot_list[[1]]
+
+```
+
+```{r}
+plot_list[[2]]
+```
+
+```{r}
+plot_list[[3]]
+```
+
+```{r}
+plot_list[[4]]
+```
+
+```{r}
+plot_list[[5]]
+```
+
+```{r}
+plot_list[[6]]
+
+
+
+
+```
