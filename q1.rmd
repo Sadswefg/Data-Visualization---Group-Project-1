@@ -90,15 +90,19 @@ for(waste in waste_types) {
   models[[waste]] <- model
 }
 
-# Display summaries of all models (optional, can be verbose)
+# Display summaries of all models
 lapply(models, summary)
+```
 
+```{r}
 # Function to create prediction plots for a given waste type
 create_prediction_plot <- function(waste) {
-  # Create prediction data
-  prediction_data <- data.frame(Date_numeric = seq(min(recent_data_long$Date_numeric), max(recent_data_long$Date_numeric), by = 1))
+  # Extending the prediction range to include the next 3 months
+  max_date_numeric <- max(recent_data_long$Date_numeric)
+  future_extend <- as.numeric((max(recent_data_long$Date) %m+% months(3)) - max(recent_data_long$Date))
+  prediction_data <- data.frame(Date_numeric = seq(min(recent_data_long$Date_numeric), max_date_numeric + future_extend, by = 1))
   prediction_data$Predicted_Count <- predict(models[[waste]], newdata = prediction_data)
-  prediction_data$Date <- min(recent_data_long$Date) + prediction_data$Date_numeric
+  prediction_data$Date <- min(recent_data_long$Date) + prediction_data$Date_numeric * days(1)
 
   # Plotting
   p <- ggplot(filter(recent_data_long, Waste_Type == waste), aes(x = Date, y = Count)) +
@@ -112,13 +116,16 @@ create_prediction_plot <- function(waste) {
 
   return(p)
 }
+```
 
+```{r}
 # Use the function to create plots
 plot_list <- lapply(waste_types, create_prediction_plot)
 
 plot_list[[1]]
 
 ```
+
 ```{r}
 plot_list[[2]]
 ```
