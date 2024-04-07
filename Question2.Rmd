@@ -144,16 +144,17 @@ composition_data_long <- latest_year_data %>%
   summarise(Quantity = sum(Quantity, na.rm = TRUE)) %>%
   ungroup()
 
-ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) +
+ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) + 
   geom_bar(stat = "identity", position = "stack") +
   theme_minimal() +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1), 
-    legend.position = "bottom"
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom" 
   ) +
-  labs(title = paste("Composition of Trash Collected in", latest_year),
+  labs(title = paste("Composition of Trash Collected in", latest_year), 
        x = "Trash Wheel",
        y = "Total Weight Collected") +
-  scale_fill_brewer(palette = "Spectral")
+  scale_fill_brewer(palette = "Spectral") + 
+  scale_y_continuous(labels = scales::comma_format(scale = 1e-3))
 
 ```
