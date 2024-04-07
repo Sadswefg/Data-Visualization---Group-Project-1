@@ -5,7 +5,7 @@ library(ggplot2)
 library(tidyr)
 
 # Read the CSV file
-data <- read.csv("trashwheel.csv")
+data <- read.csv("data/trashwheel.csv")
 data$Date <- as.Date(data$Date, format = "%m/%d/%Y")
 ```
 
