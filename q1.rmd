@@ -23,12 +23,12 @@ sums_recent <- recent_data %>%
 
 head(sums_recent)
 ```
+
 ```{r}
 sums_recent <- pivot_longer(sums_recent, cols = everything(), names_to = "Waste_Type", values_to = "Total")
 
 print(sums_recent)
 ```
-
 
 ```{r}
 ggplot(sums_recent, aes(x = Waste_Type, y = Total, fill = Waste_Type)) +
@@ -73,6 +73,7 @@ summary_stats <- recent_data_long %>%
 # Print the summary statistics
 print(summary_stats)
 ```
+
 ```{r}
 recent_data_long$Date_numeric <- as.numeric(recent_data_long$Date - min(recent_data_long$Date))
 
@@ -127,15 +128,19 @@ plot_list[[1]]
 ```{r}
 plot_list[[2]]
 ```
+
 ```{r}
 plot_list[[3]]
 ```
+
 ```{r}
 plot_list[[4]]
 ```
+
 ```{r}
 plot_list[[5]]
 ```
+
 ```{r}
 plot_list[[6]]
 
@@ -143,7 +148,3 @@ plot_list[[6]]
 
 
 ```
-
-
-
-

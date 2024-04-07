@@ -157,7 +157,3 @@ ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) +
   scale_fill_brewer(palette = "Spectral")
 
 ```
-
-```{r}
-
-```
