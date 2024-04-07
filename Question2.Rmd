@@ -1,0 +1,159 @@
+---
+title: "Question2"
+output:
+  pdf_document: default
+  html_document: default
+date: "2024-04-06"
+---
+
+```{r}
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(tidyr)
+
+# Read the CSV file
+trashwheel_data <- read.csv("trashwheel.csv")
+```
+
+\
+To delve deeper into the analysis of waste collection efficiency and effectiveness, we calculate the total weight and volume of waste collected within a year. This step is crucial for understanding the scale of waste management efforts and their year-on-year progression.
+
+-   **New variables:** `TotalWeight` and `TotalVolume` calculated by taking sum of weight and volume within a year for each Trash Wheel.
+
+```{r}
+#  Data segmentation by Trash Wheel by Year
+trashwheel_segments <- trashwheel_data %>%
+  group_by(Name, Year) %>%
+  summarise(
+    TotalWeight = sum(Weight, na.rm = TRUE),
+    TotalVolume = sum(Volume, na.rm = TRUE)
+  )
+trashwheel_segments
+```
+
+Now we plot the line graph to visualize the performance in terms of `TotalWeight` and `TotalVolume` of trash wheel over years
+
+```{r}
+# Time-Series Analysis: Performance of each Trash Wheel over time
+ggplot(trashwheel_segments, aes(x = Year, y = TotalWeight, group = Name, color = Name)) +
+  geom_line() +
+  geom_point(size = 3, shape = 21, fill = "white") + # Using filled points for better visibility
+  theme_minimal() +
+  labs(title = "Annual Total Weight of Collected Waste by Trash Wheel",
+       x = "Year", y = "Total Weight (Tons)") +
+  theme(legend.title = element_blank(), # Removing the legend title for clarity
+        legend.position = "bottom", # Positioning legend at the bottom for easy comparison
+        axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+ggplot(trashwheel_segments, aes(x = Year, y = TotalVolume, group = Name, color = Name)) +
+  geom_line() +
+  geom_point(size = 3, shape = 21, fill = "white") + # Using filled points for better visibility
+  theme_minimal() +
+  labs(title = "Annual Total Volume of Collected Waste by Trash Wheel",
+       x = "Year", y = "Total Volume (Cubic Yards)") +
+  theme(legend.title = element_blank(), # Removing the legend title for clarity
+        legend.position = "bottom", # Positioning legend at the bottom for easy comparison
+        axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+Now, in order to plot a line graph to illustrate the performance of each Trash Wheel over time, highlighting trends and year-on-year changes in waste collection, we will need to calculate the rate of change in both weight and volume.
+
+-   **New Variables:** `Yearly Performance Growth Rate`, calculated as the percentage change in `Weight` and `Volume` from one year to the next, to quantify performance improvements or declines.
+
+```{r}
+# Calculating Yearly Performance Growth Rate
+trashwheel_segments <- trashwheel_segments %>%
+  group_by(Name) %>%
+  arrange(Year) %>%
+  mutate(
+    WeightGrowthRate = (TotalWeight / lag(TotalWeight) - 1) * 100, # Growth weight rate 
+    VolumeGrowthRate = (TotalVolume / lag(TotalVolume) - 1) * 100 # Growth volume rate 
+  ) %>% 
+  replace_na(list(WeightGrowthRate = 0, VolumeGrowthRate = 0)) %>%  # means that at the time when a trash wheel start to be used, we set the intial value for the rate equals to 0. 
+  arrange(desc(WeightGrowthRate), desc(VolumeGrowthRate))
+trashwheel_segments
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+
+# Assigning unique shapes to each Trash Wheel
+shapes <- c(16, 17, 18, 19) # Circle, Triangle, Square, Diamond
+
+ggplot(trashwheel_segments, aes(x = WeightGrowthRate, y = VolumeGrowthRate, color = Name)) +
+  geom_point(aes(shape = Name), size = 3) + 
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_text_repel(aes(label = if_else(Year == max(Year) | Year == min(Year), as.character(Year), "")),
+                  nudge_y = 0.05, size = 3, 
+                  segment.color = 'grey50') + # Add labels to first and last years for clarity
+  scale_shape_manual(values = shapes) + # Apply the shapes
+  theme_minimal() +
+  labs(title = "Relationship Between Weight and Volume Growth Rates by Trash Wheel",
+       x = "Weight Growth Rate (%)", y = "Volume Growth Rate (%)") +
+  theme(legend.title = element_blank()) 
+```
+
+The graph demonstrates a largely linear correlation between the changes in weight and volume, indicating that an increase in weight tends to correspond with an increase in volume.
+
+Given this observation, focusing on a single attribute could simplify our analysis. Nevertheless, we will continue to examine both attributes to uncover any potential interesting phenomena that might emerge.
+
+We plot a line graph for comparison between growth rate in both `Weight` and `Volume` as follow:
+
+```{r}
+library(ggplot2)
+
+# Plotting Weight Growth Rate over Time for each Trash Wheel
+ggplot(trashwheel_segments, aes(x = Year, y = WeightGrowthRate, group = Name)) +
+  geom_line(aes(color = Name)) +
+  geom_point(aes(color = Name)) +
+  geom_smooth(se = FALSE, method = "loess", color = "gray40") + # Add a smooth trend line
+  facet_wrap(~Name, scales = "free_y") + # Faceting by Trash Wheel
+  theme_minimal() +
+  labs(title = "Weight Growth Rate Over Time by Trash Wheel",
+       x = "Year", y = "Weight Growth Rate (%)") +
+  theme(legend.title = element_blank() , 
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Plotting Volume Growth Rate over Time for each Trash Wheel
+ggplot(trashwheel_segments, aes(x = Year, y = VolumeGrowthRate, group = Name)) +
+  geom_line(aes(color = Name)) +
+  geom_point(aes(color = Name)) +
+  geom_smooth(se = FALSE, method = "loess", color = "gray40") + # Add a smooth trend line
+  facet_wrap(~Name, scales = "free_y") + # Faceting by Trash Wheel
+  theme_minimal() +
+  labs(title = "Volume Growth Rate Over Time by Trash Wheel",
+       x = "Year", y = "Volume Growth Rate (%)") +
+  theme(legend.title = element_blank(), 
+        axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Filter data for the most recent year
+latest_year <- max(trashwheel_data$Year)
+latest_year_data <- trashwheel_data %>%
+  filter(Year == latest_year)
+
+# Melt the data to long format for ggplot
+composition_data_long <- latest_year_data %>%
+  select(Name, PlasticBottles, Polystyrene, CigaretteButts, GlassBottles, PlasticBags, Wrappers, SportsBalls) %>%
+  gather(key = "TrashType", value = "Quantity", -Name) %>%
+  group_by(Name, TrashType) %>%
+  summarise(Quantity = sum(Quantity, na.rm = TRUE)) %>%
+  ungroup()
+
+ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1), 
+    legend.position = "bottom"
+  ) +
+  labs(title = paste("Composition of Trash Collected in", latest_year),
+       x = "Trash Wheel",
+       y = "Total Weight Collected") +
+  scale_fill_brewer(palette = "Spectral")
+
+```
