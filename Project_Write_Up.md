@@ -152,7 +152,7 @@ ggplot(summary_stats, aes(x = Waste_Type, y = Median_Count, fill = Waste_Type)) 
        y = "Median Count") +
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) 
 ```
-![Boxplot](data/picture/multifacetedbar.PNG)
+![Boxplot](data/picture/Boxplots.PNG)
 - Discussion:
 
 The regression analysis of scatter plots revealed divergent trends in waste generation, highlighting both positive environmental progress and areas needing improvement. The variability in trends across categories reflects the complex factors influencing waste generation, from regulatory changes to seasonal behaviors. These insights are crucial for shaping effective waste management strategies and promoting sustainable community practices.
@@ -169,3 +169,9 @@ Despite the value of this dataset, several issues warrant attention when interpr
 - **Environmental Biases**: External factors such as weather conditions—particularly heavy rainfalls that can spike debris flow—need to be considered as they can significantly influence the volume of waste collected.
 
 These factors must be carefully considered to ensure that the analysis remains robust and that conclusions drawn are both reliable and actionable. The subsequent sections of this document will delve into a detailed examination of the dataset using statistical methods and visualizations to assess the efficacy and impact of the Trash Wheel project on Baltimore's urban waterways.
+
+## Conclusion
+
+In summary, the Trash Wheel project has proven to be an effective environmental safeguard for Baltimore's waterways, successfully intercepting over one million pounds of debris and preventing it from polluting the Chesapeake Bay. Our analysis of the trashwheel.csv dataset highlights not only the types and quantities of collected waste but also reveals significant seasonal and event-driven fluctuations in waste accumulation. These findings underscore the importance of the Trash Wheels in urban waste management and environmental protection.
+
+To build on these insights, further steps could include enhancing data collection methods to fill gaps and improve accuracy, and expanding public education campaigns to reduce littering and increase recycling efforts. Additionally, implementing more Trash Wheels at strategic locations could further decrease the pollutant load entering water bodies. Such initiatives would not only bolster the current project's success but also align with LeadUp's goals to cultivate leadership qualities among youth by encouraging proactive involvement in sustainable and community-focused actions.
