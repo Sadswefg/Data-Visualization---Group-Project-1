@@ -12,6 +12,146 @@ This dataset is crucial for several reasons:
 - **Policy and Planning**: By analyzing trends and patterns in the data, policymakers and urban planners can better understand the sources and scales of water pollution, leading to more targeted and effective environmental regulations and initiatives.
 - **Public Awareness and Education**: Disseminating findings from this data can enhance public awareness about the impact of littering and the benefits of recycling, potentially fostering more environmentally responsible behaviors.
 
+## Questions and our approach
+1. What are the types of waste composition that has their weight/volume increase in the last 6 months?
+
+- Introduction:
+This report examines the composition of waste collected over the last six months, focusing on specific categories: Plastic Bottles, Polystyrene, Cigarette Butts, Glass Bottles, Plastic Bags, Wrappers, and Sports Balls. The goal is to determine which types of waste have seen increases in the collected amount. Understanding these trends is vital for waste management agencies to refine their operations and for policymakers to gauge the effectiveness of current environmental regulations and the impact of societal behavior on waste production. This inquiry is driven by the urgent need for environmental sustainability solutions in the face of growing urban populations, which typically result in higher waste generation.
+
+- Approach:
+We used several plots and methods for this question.
+    - Bar Chart: This chart provides an immediate visual comparison of the total waste collected by type over the last six months. To accommodate the wide range of values, we applied a logarithmic scale, improving visibility for categories with smaller volumes.
+    
+    - Line and Scatter Plots: Although the bar chart showed the volume for each waste type, it lacked temporal details necessary for trend analysis. Initially, a line chart was used, but it was cluttered due to the diversity of waste types. We opted for a scatter plot with linear regression to clarify the trends over time.
+
+- Analysis:
+```{r}
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(tidyr)
+
+# Read the CSV file
+data <- read.csv("trashwheel.csv")
+data$Date <- as.Date(data$Date, format = "%m/%d/%Y")
+
+#filter data for the last 6 months
+recent_data <- data %>%
+  filter(Date > max(Date) %m-% months(6))
+
+#calculate total number of encountered waste for each category by summing the column.
+sums_recent <- recent_data %>%
+  select(-Year) %>%
+  select(-Date) %>%
+  summarise(across(where(is.numeric), sum, na.rm = TRUE))
+
+#format
+sums_recent <- pivot_longer(sums_recent, cols = everything(), names_to = "Waste_Type", values_to = "Total")
+```
+
+```{r}
+#bar chart
+ggplot(sums_recent, aes(x = Waste_Type, y = Total, fill = Waste_Type)) +
+  geom_bar(stat = "identity") +
+  scale_y_log10() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Total Waste Collected Over the Last 6 Months",
+       x = "Waste Type",
+       y = "Total Collected",
+       fill = "Waste Type") +
+  scale_fill_brewer(palette = "Set3")
+```
+
+```{r}
+#get the number of collected waste for each type in a day for the simple linear regression
+recent_data_long <- recent_data %>%
+  select(Date, PlasticBottles, Polystyrene, CigaretteButts, GlassBottles,
+         PlasticBags, Wrappers, SportsBalls) %>%
+  gather(key = "Waste_Type", value = "Count", -Date)
+
+recent_data_long$Date_numeric <- as.numeric(recent_data_long$Date - min(recent_data_long$Date))
+
+# List of waste types to model
+waste_types <- c("Polystyrene", "CigaretteButts", "GlassBottles", "PlasticBags", "Wrappers", "SportsBalls")
+
+# Initialize an empty list to store models
+models <- list()
+
+# Loop over waste types, fit model, and store
+for(waste in waste_types) {
+  model <- lm(Count ~ Date_numeric, data = filter(recent_data_long, Waste_Type == waste))
+  models[[waste]] <- model
+}
+
+# Display summaries of all models
+lapply(models, summary)
+
+# Function to create prediction plots for a given waste type
+create_prediction_plot <- function(waste) {
+  # Extending the prediction range to include the next 3 months
+  max_date_numeric <- max(recent_data_long$Date_numeric)
+  future_extend <- as.numeric((max(recent_data_long$Date) %m+% months(3)) - max(recent_data_long$Date))
+  prediction_data <- data.frame(Date_numeric = seq(min(recent_data_long$Date_numeric), max_date_numeric + future_extend, by = 1))
+  prediction_data$Predicted_Count <- predict(models[[waste]], newdata = prediction_data)
+  prediction_data$Date <- min(recent_data_long$Date) + prediction_data$Date_numeric * days(1)
+
+  # Plotting
+  p <- ggplot(filter(recent_data_long, Waste_Type == waste), aes(x = Date, y = Count)) +
+    geom_point(aes(color = "Actual Data"), size = 2) +
+    geom_line(data = prediction_data, aes(x = Date, y = Predicted_Count, color = "Predicted Data")) +
+    theme_minimal() +
+    labs(title = paste("Predictive Model for", waste, "Waste"),
+         x = "Date",
+         y = paste("Count of", waste),
+         color = "Data Type")
+
+  return(p)
+}
+
+# Use the function to create plots
+plot_list <- lapply(waste_types, create_prediction_plot)
+plot_list[[1]]
+plot_list[[2]]
+plot_list[[3]]
+plot_list[[4]]
+plot_list[[5]]
+plot_list[[6]]
+```
+
+For extra insight such as what waste type is dominant to the other, I implemented some statistical test and a boxplot to extract even deeper into the data intel.
+
+```{r}
+summary_stats <- recent_data_long %>%
+  group_by(Waste_Type) %>%
+  summarise(Median_Count = median(Count),
+            IQR = IQR(Count),
+            Lower_Whisker = quantile(Count, 0.25) - 1.5 * IQR(Count),
+            Upper_Whisker = quantile(Count, 0.75) + 1.5 * IQR(Count),
+            Mean_Count = mean(Count))
+
+
+# Calculate error margin for IQR (taking half of the IQR as the error margin for simplicity)
+summary_stats <- summary_stats %>%
+  mutate(Error_Margin = IQR / 2)
+
+# Create a multi-faceted bar chart with error bars
+ggplot(summary_stats, aes(x = Waste_Type, y = Median_Count, fill = Waste_Type)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_errorbar(aes(ymin = Median_Count - Error_Margin, ymax = Median_Count + Error_Margin), width = 0.25) +
+  facet_wrap(~ Waste_Type, scales = "free_x") +
+  theme_minimal() +
+  labs(title = "Median Count of Various Waste Types with IQR Error Bars",
+       x = "Waste Type",
+       y = "Median Count") +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) 
+```
+- Discussion:
+
+The regression analysis of scatter plots revealed divergent trends in waste generation, highlighting both positive environmental progress and areas needing improvement. The variability in trends across categories reflects the complex factors influencing waste generation, from regulatory changes to seasonal behaviors. These insights are crucial for shaping effective waste management strategies and promoting sustainable community practices.
+
+Moreover, the box plots provide a deeper understanding of waste prevalence and variation in collection figures. This data can guide waste management and recycling initiatives to focus on areas with high waste production or significant collection variability, such as launching public awareness campaigns for proper disposal practices or enhancing recycling efforts.
+
 ## Challenges Associated with the Dataset
 
 Despite the value of this dataset, several issues warrant attention when interpreting its findings:
