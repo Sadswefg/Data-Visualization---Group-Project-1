@@ -27,6 +27,8 @@ We used several plots and methods for this question.
 
       ![Line chart - messy one](data/picture/linechart.PNG)
     ![Linear Regression](data/picture/linearregression.PNG)
+    - A box plot was also implemented for some outlier analysis. However, it does not give too much effective since there was only a few mistake probably from wrong label.
+      ![boxplot](data/picture/boxplot.PNG)
 
 - Analysis:
 ```{r}
@@ -123,7 +125,7 @@ plot_list[[5]]
 plot_list[[6]]
 ```
 
-For extra insight such as what waste type is dominant to the other, I implemented some statistical test and a boxplot to extract even deeper into the data intel.
+For extra insight such as what waste type is dominant to the other, I implemented a multi-facet barchart with IQR represented as a error bar.
 
 ```{r}
 summary_stats <- recent_data_long %>%
@@ -155,7 +157,7 @@ ggplot(summary_stats, aes(x = Waste_Type, y = Median_Count, fill = Waste_Type)) 
 
 The regression analysis of scatter plots revealed divergent trends in waste generation, highlighting both positive environmental progress and areas needing improvement. The variability in trends across categories reflects the complex factors influencing waste generation, from regulatory changes to seasonal behaviors. These insights are crucial for shaping effective waste management strategies and promoting sustainable community practices.
 
-Moreover, the box plots provide a deeper understanding of waste prevalence and variation in collection figures. This data can guide waste management and recycling initiatives to focus on areas with high waste production or significant collection variability, such as launching public awareness campaigns for proper disposal practices or enhancing recycling efforts.
+Moreover, the multi-facet bar chart provide a deeper understanding of waste prevalence and variation in collection figures. This data can guide waste management and recycling initiatives to focus on areas with high waste production or significant collection variability, such as launching public awareness campaigns for proper disposal practices or enhancing recycling efforts.
 
 ## Challenges Associated with the Dataset
 
