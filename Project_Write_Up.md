@@ -21,8 +21,12 @@ This report examines the composition of waste collected over the last six months
 - Approach:
 We used several plots and methods for this question.
     - Bar Chart: This chart provides an immediate visual comparison of the total waste collected by type over the last six months. To accommodate the wide range of values, we applied a logarithmic scale, improving visibility for categories with smaller volumes.
+    ![Bar chart](data/picture/barchart.PNG)
     
     - Line and Scatter Plots: Although the bar chart showed the volume for each waste type, it lacked temporal details necessary for trend analysis. Initially, a line chart was used, but it was cluttered due to the diversity of waste types. We opted for a scatter plot with linear regression to clarify the trends over time.
+
+      ![Line chart - messy one](data/picture/linechart.PNG)
+    ![Linear Regression](data/picture/linearregression.PNG)
 
 - Analysis:
 ```{r}
@@ -146,6 +150,7 @@ ggplot(summary_stats, aes(x = Waste_Type, y = Median_Count, fill = Waste_Type)) 
        y = "Median Count") +
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) 
 ```
+![Boxplot](data/picture/Boxplots.PNG)
 - Discussion:
 
 The regression analysis of scatter plots revealed divergent trends in waste generation, highlighting both positive environmental progress and areas needing improvement. The variability in trends across categories reflects the complex factors influencing waste generation, from regulatory changes to seasonal behaviors. These insights are crucial for shaping effective waste management strategies and promoting sustainable community practices.
