@@ -512,10 +512,7 @@ ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) +
     wheels' efficiency fluctuates on a regular basis, Gwynnda's growth
     rate peaks reflect periods of greater performance or trash
     availability.
-
-```{=html}
-<!-- -->
-```
+    
 -   The comparison of composition data for 2023 provides more
     information regarding the sorts of rubbish collected, with cigarette
     butts and plastic bottles being the most prevalent across all
