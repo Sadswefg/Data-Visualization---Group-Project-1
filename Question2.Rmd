@@ -13,22 +13,27 @@ library(ggplot2)
 library(tidyr)
 
 # Read the CSV file
-trashwheel_data <- read.csv("data/rashwheel.csv")
+trashwheel_data <- read.csv("data/trashwheel.csv")
 ```
 
 \
 To delve deeper into the analysis of waste collection efficiency and effectiveness, we calculate the total weight and volume of waste collected within a year. This step is crucial for understanding the scale of waste management efforts and their year-on-year progression.
 
--   **New variables:** `TotalWeight` and `TotalVolume` calculated by taking sum of weight and volume within a year for each Trash Wheel.
+-   **New variables:**
+    -   `TotalWeight` and `TotalVolume` calculated by taking sum of weight and volume within a year for each Trash Wheel.
+    -   `Uses` calculated by number of uses for each Trash Wheel over Years.
 
 ```{r}
 #  Data segmentation by Trash Wheel by Year
 trashwheel_segments <- trashwheel_data %>%
   group_by(Name, Year) %>%
   summarise(
+    Uses = n(),
+    AverageWeight = mean(Weight, na.rm = TRUE),
+    AverageVolume = mean(Volume, na.rm = TRUE),
     TotalWeight = sum(Weight, na.rm = TRUE),
     TotalVolume = sum(Volume, na.rm = TRUE)
-  )
+  ) 
 trashwheel_segments
 ```
 
@@ -157,4 +162,22 @@ ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) +
   scale_fill_brewer(palette = "Spectral") + 
   scale_y_continuous(labels = scales::comma_format(scale = 1e-3))
 
+```
+
+```{r}
+library(ggplot2)
+
+min_uses <- min(trashwheel_segments$Uses) - 10
+max_uses <- max(trashwheel_segments$Uses) + 10
+
+# Plotting with extended regression lines
+ggplot(trashwheel_segments, aes(x = Uses, y = TotalWeight, label = Name)) +
+  geom_point(aes(color = Name), size = 4) +
+  geom_smooth(aes(color = Name), method = "lm", se = FALSE, fullrange = TRUE) +
+  scale_x_continuous(name = "Number of Uses", limits = c(min_uses, max_uses)) +
+  scale_y_continuous(name = "Total Weight Collected (kg)") +
+  theme_minimal() +
+  labs(title = "Weight Collected vs. Number of Uses for Each Trash Wheel",
+       subtitle = "Linear regression lines extended for prediction") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```

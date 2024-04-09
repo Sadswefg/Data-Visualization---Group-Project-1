@@ -71,11 +71,17 @@ This dataset is crucial for several reasons:
         for trend analysis. Initially, a line chart was used, but it was
         cluttered due to the diversity of waste types. We opted for a
         scatter plot with linear regression to clarify the trends over
-        time.
-![Line chart](data/picture/linechart.PNG)
+        time. ![Line chart](data/picture/linechart.PNG)
 
-    -   A box plot was also implemented, however, we can see directly from the visualization that the outliers was not actually accounted for a large part in the dataset. Instead, there was only 1 outlier found in the plastic bags category. This could happen from several possible reasons and
-    a wrong labeling process could be one of them. Therefore, we trying to approach the problem with another visualization that exclude the outlier and give a better looks such as the multi-faceted bar chart focusing on the dominant waste type.
+    -   A box plot was also implemented, however, we can see directly
+        from the visualization that the outliers was not actually
+        accounted for a large part in the dataset. Instead, there was
+        only 1 outlier found in the plastic bags category. This could
+        happen from several possible reasons and a wrong labeling
+        process could be one of them. Therefore, we trying to approach
+        the problem with another visualization that exclude the outlier
+        and give a better looks such as the multi-faceted bar chart
+        focusing on the dominant waste type.
 
         ![boxplot](data/picture/boxplot.PNG)
 
@@ -176,11 +182,22 @@ plot_list[[6]]
 ```
 
 ![LinearRegression](data/picture/linearregression.PNG)
-  
-The provided figure, generated from plot_list[[1]], displays a scatter plot with a linear regression line for polystyrene waste counts. The downward-sloping trend line suggests a decrease in discarded polystyrene, a potentially positive environmental trend. Notably, there's a marked reduction in waste counts between October and January, possibly linked to summer activities have ended. This observation points to the necessity for further investigation, as the simple linear regression doesn't fully explain the situational factors behind the waste reduction.
 
-  For extra insight such as what waste type is dominant to the other, we
-  implemented a multi-faceted bar chart with IQR represented as a error bar to understand how the 50% of the data was spread around the median, which would be useful when the data is not symmetrical and could be affect by some special events.
+The provided figure, generated from plot_list[[1]], displays a scatter
+plot with a linear regression line for polystyrene waste counts. The
+downward-sloping trend line suggests a decrease in discarded
+polystyrene, a potentially positive environmental trend. Notably,
+there's a marked reduction in waste counts between October and January,
+possibly linked to summer activities have ended. This observation points
+to the necessity for further investigation, as the simple linear
+regression doesn't fully explain the situational factors behind the
+waste reduction.
+
+For extra insight such as what waste type is dominant to the other, we
+implemented a multi-faceted bar chart with IQR represented as a error
+bar to understand how the 50% of the data was spread around the median,
+which would be useful when the data is not symmetrical and could be
+affect by some special events.
 
 ```{r}
 summary_stats <- recent_data_long %>%
@@ -210,27 +227,37 @@ ggplot(summary_stats, aes(x = Waste_Type, y = Median_Count, fill = Waste_Type)) 
 
 ![Multifacetedbar](data/picture/multifacetedbar.PNG)
 
-  The bar chart gives us a clear picture of different kinds of waste collected, with cigarette butts topping the list with the highest median count, which means they're often found in large numbers. However, their counts change a lot from time to time, as shown by the long IQR error bars. Plastic bottles are also frequently found, but not quite as much as cigarette butts, and their numbers also vary quite a bit. Polystyrene and wrappers don't show up in the waste as often, and polystyrene's numbers jump around more than wrappers do. Glass bottles, plastic bags, and sports balls are picked up the least, but the amounts are more or less the same each time, which the short IQR error bars tell us. This tells us that waste is not all dumped equally—some things are thrown away more often than others.
+The bar chart gives us a clear picture of different kinds of waste
+collected, with cigarette butts topping the list with the highest median
+count, which means they're often found in large numbers. However, their
+counts change a lot from time to time, as shown by the long IQR error
+bars. Plastic bottles are also frequently found, but not quite as much
+as cigarette butts, and their numbers also vary quite a bit. Polystyrene
+and wrappers don't show up in the waste as often, and polystyrene's
+numbers jump around more than wrappers do. Glass bottles, plastic bags,
+and sports balls are picked up the least, but the amounts are more or
+less the same each time, which the short IQR error bars tell us. This
+tells us that waste is not all dumped equally—some things are thrown
+away more often than others.
 
-- **Discussion:**
-The regression analysis of scatter plots revealed divergent trends in
-waste generation, highlighting both positive environmental progress and
-areas needing improvement. The variability in trends across categories
-reflects the complex factors influencing waste generation, from
-regulatory changes to seasonal behaviors. These insights are crucial for
-shaping effective waste management strategies and promoting sustainable
-community practices.
+-   **Discussion:** The regression analysis of scatter plots revealed
+    divergent trends in waste generation, highlighting both positive
+    environmental progress and areas needing improvement. The
+    variability in trends across categories reflects the complex factors
+    influencing waste generation, from regulatory changes to seasonal
+    behaviors. These insights are crucial for shaping effective waste
+    management strategies and promoting sustainable community practices.
 
-  Moreover, the multi-faceted bar chart provide a deeper understanding of
-    waste prevalence and variation in collection figures. This data can
-    guide waste management and recycling initiatives to focus on areas with
-    high waste production or significant collection variability, such as
-    launching public awareness campaigns for proper disposal practices or
-    enhancing recycling efforts.
+    Moreover, the multi-faceted bar chart provide a deeper understanding
+    of waste prevalence and variation in collection figures. This data
+    can guide waste management and recycling initiatives to focus on
+    areas with high waste production or significant collection
+    variability, such as launching public awareness campaigns for proper
+    disposal practices or enhancing recycling efforts.
 
-2.  Which type of trash wheels have a highest performance, throughout
-    the years, analyse the improvement of the usage of different trash
-    wheel?
+2\. Which type of trash wheels have a highest performance, throughout
+the years, analyse the improvement of the usage of different trash
+wheel?
 
 -   **Introduction:** The analysis scrutinizes the efficiency of trash
     wheels over the years, focusing on the annual total weight and
@@ -255,16 +282,20 @@ community practices.
 
         -   We have created 2 new variables, which are `TotalWeight` and
             `TotalVolume` calculated by taking sum of weight and volume
-            within a year for each Trash Wheel.
+            within a year for each Trash Wheel, and `Uses` calculated by
+            number of uses for each Trash Wheel over Years.
 
     ```{r}
     #  Data segmentation by Trash Wheel by Year
     trashwheel_segments <- trashwheel_data %>%
       group_by(Name, Year) %>%
       summarise(
+        Uses = n(),
+        AverageWeight = mean(Weight, na.rm = TRUE),
+        AverageVolume = mean(Volume, na.rm = TRUE),
         TotalWeight = sum(Weight, na.rm = TRUE),
         TotalVolume = sum(Volume, na.rm = TRUE)
-      )
+      ) 
     trashwheel_segments
     ```
 
@@ -471,6 +502,10 @@ ggplot(trashwheel_segments, aes(x = Year, y = VolumeGrowthRate, group = Name)) +
         highest performance based on weight growth, indicating robust
         improvement in its capacity or efficiency of waste collection.
 
+    -   Over a five-year period, the growth rate of Captain Trash Wheel
+        exceeded 30%, translating to an average annual growth rate of
+        over 6%, which was the highest among the four trash wheels.
+
 ```{r}
 ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) + 
   geom_bar(stat = "identity", position = "stack") +
@@ -506,7 +541,53 @@ ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) +
         wheels and implies a concentration on specific waste categories,
         potentially owing to their location or wheel design.
 
-\- **Discussion**:
+    -   However, we believe that there is not enough evidence to
+        conclude which type of trash wheel has a highest performance.
+        Indeed, we decided to analyze the number of use for each trash
+        wheel over the years.
+
+```{r}
+library(ggplot2)
+
+min_uses <- min(trashwheel_segments$Uses) - 10
+max_uses <- max(trashwheel_segments$Uses) + 10
+
+# Plotting with extended regression lines
+ggplot(trashwheel_segments, aes(x = Uses, y = TotalWeight, label = Name)) +
+  geom_point(aes(color = Name), size = 4) +
+  geom_smooth(aes(color = Name), method = "lm", se = FALSE, fullrange = TRUE) +
+  scale_x_continuous(name = "Number of Uses", limits = c(min_uses, max_uses)) +
+  scale_y_continuous(name = "Total Weight Collected (kg)") +
+  theme_minimal() +
+  labs(title = "Weight Collected vs. Number of Uses for Each Trash Wheel",
+       subtitle = "Linear regression lines extended for prediction") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+![](data/picture/weightNumberOfUse.PNG)
+
+-   Analysis:
+
+    -   The spread of points suggests variability in performance, with
+        some trash wheels collecting more weight per use.
+
+    -   The extended regression lines indicate the expected future and
+        past trends if current patterns hold. The slope of each line
+        provides insights into efficiency: steeper slopes hint at
+        greater increases in weight collected with each use, a sign of
+        higher efficiency.
+
+    -   The graph effectively distinguishes each trash wheel's
+        performance, allowing for a comparative analysis of their
+        productivity.
+
+    -   We can see from this graph, Mister Trash Wheel and Gwynnda could
+        be better if we use it for large amount of times (more than 25
+        times), but Professor is best fit if we only use less than 25
+        times per year.
+
+\
+- **Discussion**:
 
 -   After evaluating the data offered in numerous visual studies, a
     thorough conversation shows distinct trends and operational features
@@ -517,7 +598,7 @@ ggplot(composition_data_long, aes(x = Name, y = Quantity, fill = TrashType)) +
     wheels' efficiency fluctuates on a regular basis, Gwynnda's growth
     rate peaks reflect periods of greater performance or trash
     availability.
-    
+
 -   The comparison of composition data for 2023 provides more
     information regarding the sorts of rubbish collected, with cigarette
     butts and plastic bottles being the most prevalent across all
