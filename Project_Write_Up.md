@@ -586,7 +586,6 @@ ggplot(trashwheel_segments, aes(x = Uses, y = TotalWeight, label = Name)) +
         times), but Professor is best fit if we only use less than 25
         times per year.
 
-\
 - **Discussion**:
 
 -   After evaluating the data offered in numerous visual studies, a
