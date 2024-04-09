@@ -206,8 +206,9 @@ ggplot(summary_stats, aes(x = Waste_Type, y = Median_Count, fill = Waste_Type)) 
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) 
 ```
 
-![Boxplot](data/picture/boxplot.PNG)- **Discussion**:
+![Multifacetedbar](data/picture/multifacetedbar.PNG)
 
+- **Discussion**:
 The regression analysis of scatter plots revealed divergent trends in
 waste generation, highlighting both positive environmental progress and
 areas needing improvement. The variability in trends across categories
