@@ -72,13 +72,11 @@ This dataset is crucial for several reasons:
         cluttered due to the diversity of waste types. We opted for a
         scatter plot with linear regression to clarify the trends over
         time.
+![Line chart](data/picture/linechart.PNG)
 
-        ![Line chart - messy one](data/picture/linechart.PNG) ![Linear
-        Regression](data/picture/linearregression.PNG)
+    -   A box plot was also implemented, however, we can see directly from the visualization that the outliers was not actually accounted for a large part in the dataset. Instead, there was only 1 outlier found in the plastic bags category. This could happen from several possible reasons and
+    a wrong labeling process could be one of them. Therefore, we trying to approach the problem with another visualization that exclude the outlier and give a better looks such as the multi-faceted bar chart focusing on the dominant waste type.
 
-    -   A box plot was also implemented for some outlier analysis.
-        However, it does not give too much effective since there was
-        only a few mistake probably from wrong label.
         ![boxplot](data/picture/boxplot.PNG)
 
 -   **Analysis:**
@@ -177,8 +175,12 @@ plot_list[[5]]
 plot_list[[6]]
 ```
 
-For extra insight such as what waste type is dominant to the other, I
-implemented a multi-facet barchart with IQR represented as a error bar.
+![LinearRegression](data/picture/linearregression.PNG)
+  
+The provided figure, generated from plot_list[[1]], displays a scatter plot with a linear regression line for polystyrene waste counts. The downward-sloping trend line suggests a decrease in discarded polystyrene, a potentially positive environmental trend. Notably, there's a marked reduction in waste counts between October and January, possibly linked to summer activities have ended. This observation points to the necessity for further investigation, as the simple linear regression doesn't fully explain the situational factors behind the waste reduction.
+
+  For extra insight such as what waste type is dominant to the other, we
+  implemented a multi-faceted bar chart with IQR represented as a error bar to understand how the 50% of the data was spread around the median, which would be useful when the data is not symmetrical and could be affect by some special events.
 
 ```{r}
 summary_stats <- recent_data_long %>%
@@ -208,7 +210,9 @@ ggplot(summary_stats, aes(x = Waste_Type, y = Median_Count, fill = Waste_Type)) 
 
 ![Multifacetedbar](data/picture/multifacetedbar.PNG)
 
-- **Discussion**:
+  The bar chart gives us a clear picture of different kinds of waste collected, with cigarette butts topping the list with the highest median count, which means they're often found in large numbers. However, their counts change a lot from time to time, as shown by the long IQR error bars. Plastic bottles are also frequently found, but not quite as much as cigarette butts, and their numbers also vary quite a bit. Polystyrene and wrappers don't show up in the waste as often, and polystyrene's numbers jump around more than wrappers do. Glass bottles, plastic bags, and sports balls are picked up the least, but the amounts are more or less the same each time, which the short IQR error bars tell us. This tells us that waste is not all dumped equally—some things are thrown away more often than others. The chart uses different colors to separate each type of waste and puts them in their own sections for easy viewing, so it doesn't get too crowded and confusing. 
+
+- **Discussion:**
 The regression analysis of scatter plots revealed divergent trends in
 waste generation, highlighting both positive environmental progress and
 areas needing improvement. The variability in trends across categories
@@ -217,12 +221,12 @@ regulatory changes to seasonal behaviors. These insights are crucial for
 shaping effective waste management strategies and promoting sustainable
 community practices.
 
-Moreover, the multi-facet bar chart provide a deeper understanding of
-waste prevalence and variation in collection figures. This data can
-guide waste management and recycling initiatives to focus on areas with
-high waste production or significant collection variability, such as
-launching public awareness campaigns for proper disposal practices or
-enhancing recycling efforts.
+  Moreover, the multi-faceted bar chart provide a deeper understanding of
+    waste prevalence and variation in collection figures. This data can
+    guide waste management and recycling initiatives to focus on areas with
+    high waste production or significant collection variability, such as
+    launching public awareness campaigns for proper disposal practices or
+    enhancing recycling efforts.
 
 2.  Which type of trash wheels have a highest performance, throughout
     the years, analyse the improvement of the usage of different trash
