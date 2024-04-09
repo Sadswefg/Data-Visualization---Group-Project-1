@@ -13,7 +13,7 @@ library(ggplot2)
 library(tidyr)
 
 # Read the CSV file
-trashwheel_data <- read.csv("trashwheel.csv")
+trashwheel_data <- read.csv("data/rashwheel.csv")
 ```
 
 \
